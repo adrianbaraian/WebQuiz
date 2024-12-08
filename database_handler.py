@@ -31,37 +31,6 @@ class DatabaseConnection:
             self._connection.close()
             self._connection = None
 
-
-# class FOLSentence:
-#     def __init__(self, sentence_id, data, predicates: list, constants: list, difficulty):
-#         self.sentence_id = sentence_id
-#         self.data = data
-#         self.predicates = predicates
-#         self.constants = constants
-#         self.difficulty = difficulty
-#
-#     def getId(self):
-#         return self.sentence_id
-#
-#     def getData(self):
-#         return self.data
-#
-#     def getPredicates(self):
-#         return self.predicates
-#
-#     def getConstants(self):
-#         return self.constants
-#
-#     def getDifficulty(self):
-#         return self.difficulty
-#
-#     def __str__(self):
-#         return f"id: {self.sentence_id}" + "; fol_sentence: " + self.data + "; predicates: " + self.predicates.__str__() + "; constants: " + self.constants.__str__() + "; diff: " + self.difficulty
-#
-#     def __eq__(self, other):
-#         return self.sentence_id == other.sentence_id
-
-
 def createDatabase():
     db = DatabaseConnection()
     conn = db.get_connection()

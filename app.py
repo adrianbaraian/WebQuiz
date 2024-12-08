@@ -8,8 +8,8 @@ import logging
 app = Flask(__name__)
 
 logging.basicConfig(
-    filename='app.log',  # Log file name
-    level=logging.ERROR,  # Log only errors and critical issues
+    filename='app.log',
+    level=logging.ERROR,
     format='%(asctime)s [%(levelname)s] in %(module)s: %(message)s'
 )
 
@@ -75,7 +75,7 @@ def fetchRandomSentences():
 
         return jsonify(sentences), 200
     except Exception as e:
-        error_details = traceback.format_exc()  # Capture full stack trace
+        error_details = traceback.format_exc()
         app.logger.error("Error fetching random sentences: %s", error_details)
         return jsonify({
             "error": "Failed to fetch random sentences",
