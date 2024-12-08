@@ -199,7 +199,6 @@ def createDatabase():
     conn.close()
     db.disconnect()
 
-
 def getFOLSentences():
     db = DatabaseConnection()
     conn = db.get_connection()
@@ -259,29 +258,31 @@ def getFOLSentenceById(sentence_id: int):
 def getRandomSentences():
     db = DatabaseConnection()
     conn = db.get_connection()
-    cur = conn.cursor(cursor_factory=DictCursor)
-
-    cur.execute("""
-        SELECT 
-            fol.id AS id,
-            fol.english_sentence AS english_sentence,
-            fol.fol_sentence AS fol_sentence,
-            array_agg(DISTINCT p.data) AS predicates,
-            array_agg(DISTINCT c.data) AS constants,
-            fol.difficulty AS difficulty
-        FROM sentence fol
-        LEFT JOIN public.sentence_predicate sp ON fol.id = sp.sentence_id
-        LEFT JOIN public.predicate p ON p.id = sp.predicate_id
-        LEFT JOIN public.sentence_constant sc ON fol.id = sc.sentence_id
-        LEFT JOIN public.constant c ON c.id = sc.constant_id
-        GROUP BY fol.id
-        ORDER BY RANDOM()
-        LIMIT 10;
-    """)
-
-    sentences = [dict(row) for row in cur.fetchall()]
-
-    cur.close()
-    conn.close()
-    db.disconnect()
+    try:
+        cur = conn.cursor(cursor_factory=DictCursor)
+        cur.execute("""
+            SELECT 
+                fol.id AS id,
+                fol.english_sentence AS english_sentence,
+                fol.fol_sentence AS fol_sentence,
+                array_agg(DISTINCT p.data) AS predicates,
+                array_agg(DISTINCT c.data) AS constants,
+                fol.difficulty AS difficulty
+            FROM sentence fol
+            LEFT JOIN public.sentence_predicate sp ON fol.id = sp.sentence_id
+            LEFT JOIN public.predicate p ON p.id = sp.predicate_id
+            LEFT JOIN public.sentence_constant sc ON fol.id = sc.sentence_id
+            LEFT JOIN public.constant c ON c.id = sc.constant_id
+            GROUP BY fol.id
+            ORDER BY RANDOM()
+            LIMIT 10;
+        """)
+        sentences = [dict(row) for row in cur.fetchall()]
+    except Exception as e:
+        print(f"Error fetching random sentences: {e}")
+        sentences = []
+    finally:
+        cur.close()
+        conn.close()
+        db.disconnect()
     return sentences
